@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Timer</title>
+    <style>
+      .chartCard {
+        width: 100vw;
+        height: calc(100vh - 40px);
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .chartBox {
+        width: 430px;
+        padding: 20px;
+        border-radius: 20px;
+        border: solid 3px rgb(110, 26, 255);
+        background: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="chartMenu"></div>
+    <div class="chartCard">
+      <div class="chartBox">
+        <canvas id="myChart"></canvas>
+      </div>
+    </div>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/chart.js"
+    ></script>
+    <script>
+      // setup
+      // const time = document.getElementById;
+      const data = {
+        labels: ["Timer", "White space"],
+        datasets: [
+          {
+            label: "Time",
+            data: [18, 14],
+            borderDash: [10, 5],
+            backgroundColor: ["white", "rgba(54, 162, 235, 0.2)"],
+            // borderColor: ["white", "white"],
+            //   border-style: ["dotted", "solid"],
+            cutout: "175",
+          },
+        ],
+      };
+      const Timer = {
+        id: "Timer",
+        afterDraw(chart, args, options) {
+          const {
+            ctx,
+            chartArea: { width, height },
+          } = chart;
+          ctx.save();
+          ctx.font = "bolder 20px Arial";
+          ctx.fillStyle = "black";
+          ctx.textAlign = "center";
+          ctx.fillText("Timer", width / 2, height / 2);
+          // ctx.fillText(, width / 2, height / 2);
+          ctx.restore();
+          ctx.fillText(
+            " Time left until the event, '${timeLeft}' ",
+            width / 2 - 50,
+            height / 2 + 60
+          );
+        },
+      };
+
+      // const chartAreaBorder = {
+      //   id: "chartAreaBorder",
+      //   afterDatasetsDraw(chart, args, options) {
+      //     const {
+      //       ctx,
+      //       chartArea: { top, bottom, left, right, width, height },
+      //     } = chart;
+      //     ctx.save();
+      //     ctx.fillStyle = "black";
+      //     ctx.strokeRect(right, top, 0, height);
+      //   },
+      // };
+
+      // config
+      const config = {
+        type: "pie",
+        data,
+        options: {
+          plugins: {
+            legend: {
+              display: false,
+            },
+            tooltip: { enabled: false },
+          },
+        },
+        plugins: [Timer, chartAreaBorder],
+      };
+
+      // render init block
+      const myChart = new Chart(document.getElementById("myChart"), config);
+
+      function updateCountDown() {
+        myChart.config.data.datasets[0].data[0] = timeLeft;
+        myChart.config.data.datasets[0].data[1] = time;
+        myChart.update();
+      }
+    </script>
+  </body>
+</html>
